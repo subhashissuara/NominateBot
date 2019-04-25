@@ -20,10 +20,10 @@ start_epoch=int(end_epoch - (60*60*24*8)) # Current time - the amount you mentio
 print("Starting Bot...")
 
 reddit = praw.Reddit(client_id= ' ',         
-					 client_secret= ' ',
-					 username= ' ',
-					 password= ' ',
-					 user_agent= 'Created by u/QuantumBrute') # Login to reddit API
+		     client_secret= ' ',
+		     username= ' ',
+		     password= ' ',
+		     user_agent= 'Created by u/QuantumBrute') # Login to reddit API
 
 api = PushshiftAPI() # Variable to use the PushShiftAPI
 subreddit = reddit.subreddit(subreddit_name)
