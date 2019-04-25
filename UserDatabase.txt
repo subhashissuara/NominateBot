@@ -1,0 +1,14 @@
+[
+  {
+    "Name": "jschlattalt",
+    "SchlattCoins": 100
+  },
+  {
+    "Name": "AshTulett",
+    "SchlattCoins": 11
+  },
+  {
+    "Name": "link6456",
+    "SchlattCoins": 1
+  }
+]
