@@ -13,16 +13,17 @@ import re
 subreddit_name = 'jschlatt' # Mention the subreddit that bot should work on
 limitno = 30000 # Set the maximum number of posts to get in the given timeframe
 end_epoch=int(time.time()) # Current time
-start_epoch=int(end_epoch - (60*60*24*8)) # Current time - the amount you mention in seconds
+x = int(input("Enter the number of days you want to search for:"))
+start_epoch=int(end_epoch - (60*60*24*x)) # Current time - the amount you mention in seconds
 
 #---------------------------------------------------------------------------------
 
 print("Starting Bot...")
 
-reddit = praw.Reddit(client_id= ' ',         
-		     client_secret= ' ',
-		     username= ' ',
-		     password= ' ',
+reddit = praw.Reddit(client_id= '',         
+		     client_secret= '',
+		     username= '',
+		     password= '',
 		     user_agent= 'Created by u/QuantumBrute') # Login to reddit API
 
 api = PushshiftAPI() # Variable to use the PushShiftAPI
@@ -45,6 +46,7 @@ def nominate():
         info = json.load(infile,)
     
     print("Going through posts & comments for !nominate...")
+    print(' ')
 
     data = []
 
@@ -54,7 +56,7 @@ def nominate():
     post_ids = []
     reply_to_nomination = "Nominated for +1 SchlattCoin!" # Reply that bot will post
 
-    for i in range(len(result)): 
+    for i in range(len(result)):
         post_ids.append(result[i].id) # Gathers the ids of all posts in given time frame
 
     post_ids_size = len(post_ids)
@@ -72,6 +74,7 @@ def nominate():
                 keyword = re.search("!nominate", comment.body) # Searches for !nominate in the comment
                 if keyword: # Whole process of replying, saving and setting the flairs
                     print(str(comment.author) + " has nominated " + str(author) + "!")
+                    print("Awarding SchlattCoin to " + str(author) + "...")
                     comment.save()
                     comment.reply(reply_to_nomination)
                     flag = 0
@@ -79,6 +82,8 @@ def nominate():
                         if author == data[a].get("Name"):
                             print(str(author) + " found in database!")
                             print("Sending reply and setting flair...")
+                            print("Updating the changes to database...")
+                            print(' ')
                             flag = 1
                             coins = data[a].get("SchlattCoins") 
                             coins += 1
@@ -90,7 +95,9 @@ def nominate():
                             else:
                                 flair_split = flair.get('flair_text').split()
                                 for c in range(len(flair_split)):
-                                    if flair_split[c] == "SchlattCoins":
+                                    if flair_split[c] == "SchlattCoins" or flair_split[c] == "SchlattCoin":
+                                        if flair_split[c] == "SchlattCoin":
+                                            flair_split[c] = "SchlattCoins"
                                         c -= 1
                                         flair_split[c] = str(coins)
                                         newflair = ' '.join(flair_split)
@@ -105,6 +112,10 @@ def nominate():
                             break
 
                     if flag == 0:
+                        print(str(author) + " not found in database!")
+                        print("Sending reply and setting flair...")
+                        print("Adding to database...")
+                        print(' ')
                         flair = next(reddit.subreddit(subreddit_name).flair(author))
                         item_to_add = { "Name" : str(author), "SchlattCoins" : 1}
                         data.append(item_to_add)
@@ -126,11 +137,13 @@ def nominate():
     with open('UserDatabase.txt', 'w') as outfile: # Overwites the JSON file with updated data
         json.dump(data, outfile, indent=2)
         print("Database updated successfully!")
-
+    print(' ')
+    input("Press ENTER to exit...")
 
     
 def main():
     nominate()
+    
 
 if __name__ == '__main__':
     main()
